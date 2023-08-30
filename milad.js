@@ -69,6 +69,7 @@ function main() {
     .catch(function (error) {
       console.error(error);
     });
+  count = count + 1;
 }
 
 app.get('/milad', (req, res) => {
