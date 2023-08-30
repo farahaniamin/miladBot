@@ -1,0 +1,12 @@
+{
+  "name": "miladbot",
+  "version": "1.0.0",
+  "description": "",
+  "main": "milad.js",
+  "scripts": {
+    "start": "node milad.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
