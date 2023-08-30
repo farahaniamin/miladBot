@@ -53,7 +53,7 @@ function main() {
     .request(options)
     .then(function (response) {
       console.log(response.data);
-      response.data.push(1);
+      // response.data.push(1);
       if (response.data.length !== 0) {
         axios
           .post(`${TELEGRAM_API}/sendMessage`, {
