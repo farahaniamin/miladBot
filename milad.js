@@ -102,7 +102,7 @@ function dakheliFinder() {
     .then(function (response) {
       console.log(response.data);
       let doc = response.data.find(
-        (d) => d.doctor.medicalNo == '00034479' || d.doctor.firstName == 'صدیقه'
+        (d) => d.doctor.medicalNo == '00037479' || d.doctor.firstName == 'صدیقه'
       );
       if (response.data.length !== 0 && doc.length !== 0) {
         axios
