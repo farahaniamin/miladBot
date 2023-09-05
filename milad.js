@@ -108,7 +108,7 @@ function dakheliFinder() {
         axios
           .post(`${TELEGRAM_API}/sendMessage`, {
             chat_id: 51072330,
-            text: response.data,
+            text: doc,
             parse_mode: 'markdown',
           })
           .catch((e) => console.log(`Telegram Sending Error : ${e}`));
