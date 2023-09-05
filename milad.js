@@ -4,6 +4,7 @@ const app = express();
 const port = process.env.PORT || 3000;
 const TELEGRAM_API = `https://api.telegram.org/bot${process.env.BOT_TOKEN}`;
 let count = 0;
+let dcount = 0;
 
 var options = {
   method: 'POST',
@@ -48,6 +49,29 @@ var options = {
     nationalCode: '0534461018',
   },
 };
+
+var options2 = {
+  method: 'POST',
+  url: 'https://miladhospital.com/api/Timing/InfirmaryTiming/PostSearchInfirmaryTimingResult',
+  headers: {
+    Accept: '*/*',
+    'User-Agent':
+      'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36',
+    'Content-Type': 'application/json',
+  },
+  data: {
+    infirmary: {
+      title: 'درمانگاه داخلی و عفونی',
+      code: '240',
+      coverImage: '',
+      hasBlog: true,
+      expertises: [],
+      id: 34,
+    },
+    doctors: [],
+    nationalCode: '0534461018',
+  },
+};
 function main() {
   axios
     .request(options)
@@ -72,9 +96,39 @@ function main() {
   count = count + 1;
 }
 
+function dakheliFinder() {
+  axios
+    .request(options2)
+    .then(function (response) {
+      console.log(response.data);
+      let doc = response.data.find(
+        (d) => d.doctor.medicalNo == '00034479' || d.doctor.firstName == 'صدیقه'
+      );
+      if (response.data.length !== 0 && doc.length !== 0) {
+        axios
+          .post(`${TELEGRAM_API}/sendMessage`, {
+            chat_id: 51072330,
+            text: response.data,
+            parse_mode: 'markdown',
+          })
+          .catch((e) => console.log(`Telegram Sending Error : ${e}`));
+      } else {
+        console.log('Empty');
+      }
+    })
+    .catch(function (error) {
+      console.error(error);
+    });
+  dcount = dcount + 1;
+}
+
 app.get('/milad', (req, res) => {
   res.send(`running a task every one  minute - ${count} Times .`);
   main();
+});
+app.get('/dakheli', (req, res) => {
+  res.send(`running a task every two  minute - ${dcount} Times .`);
+  dakheliFinder();
 });
 
 app.get('/', (req, res) => res.send('Milad App Runing Well :)'));
