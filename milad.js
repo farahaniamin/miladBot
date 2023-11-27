@@ -72,6 +72,29 @@ var options2 = {
     nationalCode: '0534461018',
   },
 };
+
+var options3 = {
+  method: 'POST',
+  url: 'https://miladhospital.com/api/Timing/InfirmaryTiming/PostSearchInfirmaryTimingResult',
+  headers: {
+    Accept: '*/*',
+    'User-Agent':
+      'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36',
+    'Content-Type': 'application/json',
+  },
+  data: {
+    infirmary: {
+      title: 'درمانگاه ارتوپدی',
+      code: '244',
+      coverImage: '',
+      hasBlog: true,
+      expertises: [],
+      id: 20,
+    },
+    doctors: [],
+    nationalCode: '3309694070',
+  },
+};
 function main() {
   axios
     .request(options)
@@ -121,14 +144,44 @@ function dakheliFinder() {
     });
   dcount = dcount + 1;
 }
-
+function OrtopetyFinder() {
+  axios
+    .request(options3)
+    .then(function (response) {
+      console.log(response.data);
+      // let doc = response.data.find(
+      //   (d) => d.doctor.medicalNo == '00037479' || d.doctor.firstName == 'صدیقه'
+      // );
+      if (response.data.length !== 0) {
+        axios
+          .post(`${TELEGRAM_API}/sendMessage`, {
+            chat_id: 51072330,
+            text: doc,
+            parse_mode: 'markdown',
+          })
+          .catch((e) => console.log(`Telegram Sending Error : ${e}`));
+      } else {
+        console.log('Empty');
+      }
+    })
+    .catch(function (error) {
+      console.error(error);
+    });
+  dcount = dcount + 1;
+}
 app.get('/milad', (req, res) => {
   res.send(`running a task every one  minute - ${count} Times .`);
   main();
 });
+
 app.get('/dakheli', (req, res) => {
   res.send(`running a task every two  minute - ${dcount} Times .`);
   dakheliFinder();
+});
+
+app.get('/Ortopety', (req, res) => {
+  res.send(`running a task every two  minute - ${dcount} Times .`);
+  OrtopetyFinder();
 });
 
 app.get('/', (req, res) => res.send('Milad App Runing Well :)'));
